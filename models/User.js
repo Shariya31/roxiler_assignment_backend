@@ -21,12 +21,11 @@ const userSchema = new mongoose.Schema(
         },
         address: {
             type: String,
-            // required: true,
+            required: true,
             maxlength: 400
         },
         role: {
             type: String,
-            required: true,
             default:  'user',
             enum: ['admin', 'user', 'store_owner']
         },

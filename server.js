@@ -7,6 +7,8 @@ import { errorMiddleware } from './middleware/errorMiddleware.js';
 // routes import
 
 import authRoutes from './routes/authRoutes.js'
+import userRoutes from './routes/userRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -21,6 +23,8 @@ const mongoUri = process.env.MONGO_URI || ""
 connectDB(mongoUri);
 
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(errorMiddleware)
 

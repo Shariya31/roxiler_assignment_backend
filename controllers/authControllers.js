@@ -7,17 +7,21 @@ import crypto from 'crypto'
 import sendEmail from "../utils/sendEmail.js";
 
 export const register = TryCatch(async(req, res, next)=>{
-    const {name, email, password} = req.body;
+    const {name, email, password, address, role} = req.body;
 
-    if(!name || !email || !password) return next(new Errorhandler('Please fill all the fields', 400))
+    if(!name || !email || !password || !address) return next(new Errorhandler('Please fill all the fields', 400))
 
     const userExist = await User.findOne({email})
     if(userExist) return next(new Errorhandler('User already exists | Try to login', 400))
 
+    const userRole = req.user?.role === "admin" ? role : "user";
+
     const newUser = await User.create({
         name,
         email, 
-        password
+        password,
+        address,
+        role: userRole
     })
 
     if(!newUser) return next(new Errorhandler('Error in creating the user', 500))
@@ -34,7 +38,7 @@ export const login = TryCatch(async(req, res, next)=>{
     
     if(!email || !password) return next(new Errorhandler("Please fill all the fields", 400))
     
-    const user = await User.findOne({email}).select('password name');
+    const user = await User.findOne({email}).select('password name role');
 
     if(!user) return next (new Errorhandler('No user found with this email', 404));
 
@@ -49,6 +53,7 @@ export const login = TryCatch(async(req, res, next)=>{
     res.status(200).json({
         success: true,
         message: `Login Successful | Welcome ${user.name}`,
+        user,
         token
     })
 })
@@ -66,7 +71,7 @@ export const forgotPassword = TryCatch(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
   
     //we need to construct the reset password url
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${resetToken}`;
+    const resetUrl = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
   
     const message = `You have requested a password reset. Please click the link below to reset your password:\n\n${resetUrl}\n\nIf you did not request this, please ignore this email.`;
   
@@ -94,7 +99,6 @@ export const forgotPassword = TryCatch(async (req, res, next) => {
   export const resetPassword = TryCatch(async(req, res, next)=>{
       const {token} = req.params;
       const {password} = req.body;
-  
       if(!token) return next(new Errorhandler("Reset Password Token Not Found", 404));
   
       if(!password) return next(new Errorhandler('Please provide a new password', 409));
