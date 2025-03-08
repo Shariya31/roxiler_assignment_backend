@@ -9,6 +9,9 @@ import { errorMiddleware } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import storeRoutes from './routes/storeRoutes.js'
+import ratingRoutes from './routes/ratingRoutes.js'
+import storeOwnerRoutes from './routes/storeOwnerRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -25,6 +28,9 @@ connectDB(mongoUri);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/store', storeRoutes);
+app.use('/api/stores', ratingRoutes);
+app.use('/api/store-owner', storeOwnerRoutes);
 
 app.use(errorMiddleware)
 
