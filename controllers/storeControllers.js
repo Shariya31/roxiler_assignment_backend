@@ -1,4 +1,5 @@
 import Store from "../models/Store.js";
+import User from "../models/User.js";
 import Errorhandler from "../utils/Errorhandler.js";
 import TryCatch from "../utils/TryCatch.js";
 
@@ -18,10 +19,16 @@ export const createStore = TryCatch(async (req, res, next) => {
         owner: req.user
     })
 
+    const user = await User.findById(req.user.id);
+    if(!user) return next(new Errorhandler('User not found', 404));
+    user.stores.push({store: store.id})
+    await user.save()
+
     res.status(200).json({
         success: true,
         message: "Store created successfully",
-        store
+        store, 
+        user
     })
 })
 

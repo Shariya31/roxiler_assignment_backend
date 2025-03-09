@@ -3,7 +3,6 @@ import Errorhandler from "../utils/Errorhandler.js";
 import TryCatch from "../utils/TryCatch.js";
 
 export const submitRating = TryCatch(async(req, res, next)=>{
-    console.log(req.user.id)
     const {rating} = req.body;
     const id = req.params.id
     const store = await Store.findById(id);

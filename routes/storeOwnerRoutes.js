@@ -4,6 +4,6 @@ import { authenticateUser, authorizeRoles } from '../middleware/authMiddleware.j
 
 const router = express.Router();
 
-router.get('/dashboard', authenticateUser, authorizeRoles('store-owner', 'admin'), getStoreOwnerDashboard)
+router.get('/dashboard', authenticateUser, authorizeRoles('store_owner', 'admin'), getStoreOwnerDashboard)
 
 export default router;

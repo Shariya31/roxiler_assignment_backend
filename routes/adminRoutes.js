@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/dashboard', authenticateUser, authorizeRoles('admin'), getAdminDashboard)
 router.get('/users', authenticateUser, authorizeRoles('admin'), getAllUsers)
-router.get('/stores', authenticateUser, authorizeRoles('admin'), getAllStores)
+router.get('/stores', authenticateUser, authorizeRoles('admin', 'user', 'store_owner'), getAllStores)
 router.get('/user/:id', authenticateUser, authorizeRoles('admin', 'store_owner'), getUserDetails)
 
 export default router;

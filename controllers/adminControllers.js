@@ -44,7 +44,10 @@ export const getAllUsers = TryCatch(async(req, res, next)=>{
         sortOptions[sortBy] = order
     }
 
-    const users = await User.find(query).sort(sortOptions);
+    const users = await User.find(query).populate({
+        path: 'stores.store',
+        select: 'name email address averageRating ratings'
+    }).sort(sortOptions);
 
     res.status(200).json({
         success: true,
@@ -53,29 +56,27 @@ export const getAllUsers = TryCatch(async(req, res, next)=>{
 });
 
 export const getAllStores = TryCatch(async(req, res, next)=>{
-    let {search, sortBy, order} = req.query;
+    let { search, sortBy, order } = req.query;
+    let query = {};
 
-    let query = {}
-
-    if(search){
-        query. $or = [
-            { name : { $regex: search, $options: "i"} },
-            { address: { $regex: search, $options: "i"} }
-        ]
+    if (search) {
+        query.$or = [
+            { name: { $regex: search, $options: "i" } },
+            { address: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i"} }
+        ];
     }
 
     let sortOptions = {};
-
-    if(sortBy){
-        order = order === 'desc' ? -1 : 1
-        sortOptions[sortBy] = order
+    if (sortBy) {
+        order = order === "desc" ? -1 : 1;
+        sortOptions[sortBy] = order;
     }
 
-    const stores = await Store.find(query).sort(sortOptions).populate("owner", "name email")
-    
+    const stores = await Store.find(query).sort(sortOptions).populate("owner", "name email");
+
     res.status(200).json({
         success: true,
-        message: 'Fetched all stores',
         stores,
     })
 })

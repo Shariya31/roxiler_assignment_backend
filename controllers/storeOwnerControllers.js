@@ -3,11 +3,10 @@ import Errorhandler from "../utils/Errorhandler.js";
 import TryCatch from "../utils/TryCatch.js";
 
 export const getStoreOwnerDashboard = TryCatch(async(req, res, next)=>{
-    const stores = await Store.find({ owner: req.user._id });
-
-    if (!stores.length) {
-        return next(new Errorhandler("No stores found for this owner", 404));
-    }
+    const stores = await Store.find({ owner: req.user._id }).populate({
+        path: 'ratings.user',
+        select: 'name'
+    });
 
     res.status(200).json({
         success: true,

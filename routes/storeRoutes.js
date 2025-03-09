@@ -4,7 +4,7 @@ import { authenticateUser, authorizeRoles } from '../middleware/authMiddleware.j
 
 const router = express.Router();
 
-router.post('/create-store', authenticateUser, authorizeRoles('admin'), createStore)
+router.post('/create-store', authenticateUser, authorizeRoles('admin', 'store_owner'), createStore)
 router.get('/all-store', authenticateUser, authorizeRoles('admin'), getAllStores)
 router.get('/:id', authenticateUser, authorizeRoles('admin'), getStoreDetails)
 
