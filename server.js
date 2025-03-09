@@ -25,6 +25,10 @@ const port = process.env.PORT || 4000
 const mongoUri = process.env.MONGO_URI || ""
 connectDB(mongoUri);
 
+app.get('/', (req, res)=>{
+    res.send('Server is running')
+})
+
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
